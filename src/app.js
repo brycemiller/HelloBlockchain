@@ -39,8 +39,11 @@ App = {
   
     loadAccount: async () => {
       // Set the current blockchain account
-      web3.eth.defaultAccount = web3.eth.accounts[0]
-      App.account = web3.eth.accounts[0];
+      web3.eth.getAccounts()
+        .then(data => {
+          App.account = web3.eth.defaultAccount = data[0];
+        }
+      );
     },
   
     loadContract: async () => {
@@ -92,7 +95,8 @@ App = {
         const message = newMessageField.val();
 
         newMessageField.prop('disabled', true);
-        await App.Hello.setMessage(message);
+        await App.Hello.setMessage(
+          message, { from:  web3.eth.defaultAccount });
         window.location.reload();
     },
   
